@@ -11,6 +11,15 @@ namespace Microsoft.Azure.SpatialAnchors.Unity
     [CreateAssetMenu(fileName = "SpatialAnchorConfig", menuName = "Azure Spatial Anchors/Configuration")]
     public class SpatialAnchorConfig : ScriptableObject
     {
+        public static SpatialAnchorConfig Create(string spatialAnchorsAccountId, string spatialAnchorsAccountKey)
+        {
+            SpatialAnchorConfig config = CreateInstance<SpatialAnchorConfig>();
+            config.authenticationMode = AuthenticationMode.ApiKey;
+            config.spatialAnchorsAccountId = spatialAnchorsAccountId;
+            config.spatialAnchorsAccountKey = spatialAnchorsAccountKey;
+            return config;
+        }
+
         [Header("Authentication")]
         [SerializeField]
         [Tooltip("The method to use for authentication.")]
