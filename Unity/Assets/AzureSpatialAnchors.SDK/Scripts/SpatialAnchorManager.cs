@@ -48,23 +48,23 @@ namespace Microsoft.Azure.SpatialAnchors.Unity
     public class SpatialAnchorManager : MonoBehaviour
     {
         #region Member Variables
-        private bool isSessionStarted = false;
-        private CloudSpatialAnchorSession session = null;
-        private SessionStatus sessionStatus = null;
+        protected bool isSessionStarted = false;
+        protected CloudSpatialAnchorSession session = null;
+        protected SessionStatus sessionStatus = null;
 
         // Android-specific variables
 #if UNITY_ANDROID
-        private static bool javaInitialized = false; // We should only run the Java initialization once
+        protected static bool javaInitialized = false; // We should only run the Java initialization once
 #endif
         //ARFoundation specific variables
 #if UNITY_ANDROID || UNITY_IOS
-        private long lastFrameProcessedTimeStamp;
-        private static Dictionary<string, ARReferencePoint> pointerToReferencePoints = new Dictionary<string, ARReferencePoint>();
-        private List<AnchorLocatedEventArgs> pendingEventArgs = new List<AnchorLocatedEventArgs>();
+        protected long lastFrameProcessedTimeStamp;
+        protected static Dictionary<string, ARReferencePoint> pointerToReferencePoints = new Dictionary<string, ARReferencePoint>();
+        protected List<AnchorLocatedEventArgs> pendingEventArgs = new List<AnchorLocatedEventArgs>();
         internal static ARReferencePointManager arReferencePointManager = null;
-        private ARCameraManager arCameraManager = null;
-        private ARSession arSession = null;
-        private Camera mainCamera;
+        protected ARCameraManager arCameraManager = null;
+        protected ARSession arSession = null;
+        protected Camera mainCamera;
 #endif // UNITY_ANDROID
 
         #endregion // Member Variables
@@ -73,30 +73,30 @@ namespace Microsoft.Azure.SpatialAnchors.Unity
         [Header("Authentication")]
         [SerializeField]
         [Tooltip("The method to use for authentication.")]
-        private AuthenticationMode authenticationMode = AuthenticationMode.ApiKey;
+        protected AuthenticationMode authenticationMode = AuthenticationMode.ApiKey;
 
         [Header("Credentials")]
         [SerializeField]
         [Tooltip("The Account ID to use when authenticating using API Key. This is provided by the Spatial Anchors service portal.")]
-        private string spatialAnchorsAccountId = "";
+        protected string spatialAnchorsAccountId = "";
 
         [SerializeField]
         [Tooltip("The Account Key to use when authenticating using API Key. This is provided by the Spatial Anchors service portal.")]
-        private string spatialAnchorsAccountKey = "";
+        protected string spatialAnchorsAccountKey = "";
 
         [Header("Credentials")]
         [SerializeField]
         [Tooltip("The Client ID to use when authenticating using Azure Active Directory.")]
-        private string clientId = "";
+        protected string clientId = "";
 
         [SerializeField]
         [Tooltip("The Tenant ID to use when authenticating using Azure Active Directory.")]
-        private string tenantId = "";
+        protected string tenantId = "";
 
         [Header("Logging")]
         [SerializeField]
         [Tooltip("The log level for messages from the Spatial Anchors service.")]
-        private SessionLogLevel logLevel = SessionLogLevel.All;
+        protected SessionLogLevel logLevel = SessionLogLevel.All;
         #endregion // Unity Inspector Variables
 
         #region Internal Methods
@@ -120,7 +120,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity
         /// <param name="exception">
         /// If true, an exception will be thrown if configuration is invalid.
         /// </param>
-        private async Task<bool> EnsureValidConfiguration(bool disable, bool exception)
+        protected async Task<bool> EnsureValidConfiguration(bool disable, bool exception)
         {
             if (!await IsValidateConfiguration())
             {
@@ -152,7 +152,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity
         /// <summary>
         /// Sends the latest ARFoundation frame to Azure Spatial Anchors
         /// </summary>
-        private void ProcessLatestFrame()
+        protected void ProcessLatestFrame()
         {
             if (!isSessionStarted)
             {
@@ -204,7 +204,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity
         /// When ARFoundation finds the platform anchor (usually within a frame or two) we will call the
         /// anchor located event.
         /// </summary>
-        private void ProcessPendingEventArgs()
+        protected void ProcessPendingEventArgs()
         {
             if (pendingEventArgs.Count > 0)
             {
@@ -548,7 +548,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity
         #endregion // Overridables
 
         #region Event Handlers
-        private async void Session_TokenRequired(object sender, TokenRequiredEventArgs args)
+        protected async void Session_TokenRequired(object sender, TokenRequiredEventArgs args)
         {
             // Get the deferral
             CloudSpatialAnchorSessionDeferral deferral = args.GetDeferral();
@@ -567,7 +567,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity
         /// to Unity ARFoundation Reference Points.
         /// </summary>
         /// <param name="obj">Event args with information about what has changed.</param>
-        private void ARReferencePointManager_referencePointsChanged(ARReferencePointsChangedEventArgs obj)
+        protected void ARReferencePointManager_referencePointsChanged(ARReferencePointsChangedEventArgs obj)
         {
             lock (pointerToReferencePoints)
             {
@@ -613,7 +613,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity
         /// Called by ARFoundation to indicate that there is a new frame to process
         /// </summary>
         /// <param name="obj">Information about the frame.  Not used.</param>
-        private void ArCameraManager_frameReceived(ARCameraFrameEventArgs obj)
+        protected void ArCameraManager_frameReceived(ARCameraFrameEventArgs obj)
         {
             ProcessLatestFrame();
         }
@@ -1073,7 +1073,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity
             {
                 return session;
             }
-            private set
+            protected set
             {
                 if (session != value)
                 {
